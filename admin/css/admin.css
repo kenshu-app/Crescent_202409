@@ -1,0 +1,185 @@
+﻿@charset "utf-8";
+
+/*-------------------------
+  初期化
+-------------------------*/
+
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  font-size: 12px;
+}
+
+header {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #666;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+main {
+  padding: 10px;
+}
+
+h1 {
+  font-size: 24px;
+  border-left: 8px solid #666;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  border: 1px solid #666;
+  background-color: #ccc;
+  padding: 4px;
+}
+
+td {
+  border: 1px solid #666;
+  padding: 4px;
+}
+
+footer {
+  padding: 10px;
+}
+
+/*-------------------------
+  グローバル
+-------------------------*/
+
+.adjust {
+  box-sizing: content-box;
+}
+
+.container {
+  max-width: 970px;
+  margin: auto;
+}
+
+.layout {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.layout h2 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.layout a, 
+.layout a:visited {
+  color: #fff;
+  text-decoration:none;
+}
+
+.logout {
+  color: #ddd;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}
+
+.logout::before {
+  content: '[';
+  margin: 0 10px;
+}
+
+.logout::after {
+  content: ']';
+  margin: 0 10px;
+}
+
+.error {
+  color: #c00;
+}
+
+.error::before {
+  content: '※';
+}
+
+/*-------------------------
+  ページネーション
+-------------------------*/
+
+.pages {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.pagination {
+  justify-content: flex-end;
+  margin: -50px 0 12px;
+}
+
+.active>.page-link, .page-link.active {
+  color: #fff;
+  background-color: #666;
+  border-color: #555;
+}
+
+.page-link {
+  color: #666;
+}
+
+/*-------------------------
+  管理者テーブル
+-------------------------*/
+
+.admin .title {
+  display:block;
+  font-size:14px;
+  font-weight: bold;
+}
+
+
+.admin img {
+  width:64px;
+  height:64px;
+}
+
+.admin {
+  text-align: center;
+}
+
+.admin td:nth-child(2) {
+  text-align: left;
+}
+
+.admin th:first-of-type,
+.admin th:nth-of-type(3) {
+  width:100px;
+}
+
+.admin th:nth-of-type(4),
+.admin th:nth-of-type(5) {
+  width:50px;
+}
+
+/*-------------------------
+  ログイン/アサイン
+-------------------------*/
+
+.entry input {
+  width: 400px;
+  padding: 5px;
+}
+
+.adminlist {
+  margin-top: 50px;
+}
