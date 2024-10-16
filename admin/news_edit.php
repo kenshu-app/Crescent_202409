@@ -1,3 +1,78 @@
+<?php
+
+declare(strict_types=1);
+require_once(dirname(__FILE__) . '/../util.inc.php');
+require_once(dirname(__FILE__) . '/../Models/News.php');
+
+const IMG_PATH = '../images/press/';
+
+if (isset($_GET['id'])) {
+    $id = (int) $_GET['id'];
+
+    $pdo = new NEWS();
+    $news = $pdo->find($id);
+
+    if ($news != false) {
+        $posted  = $news['posted_at'];
+        $title   = $news['title'];
+        $message = $news['message'];
+        $image   = $news['image'];
+    } else {
+        $idError = '指定されたお知らせは存在しません。';
+    }
+} else {
+    $idError = 'お知らせが指定されていません。';
+}
+
+if (isset($_POST['save'])) {
+
+    $posted  = $_POST['posted'];
+    $title   = $_POST['title'];
+    $message = $_POST['message'];
+    $isValidated = true;
+
+    if ($title === '' || preg_match('/^(\s|　)+$/u', $title)) {
+        $titleError = 'タイトルを入力して下さい';
+        $isValidated = false;
+    } elseif (mb_strlen($title) > 20) {
+        $titleError = 'タイトルを20文字以内で入力して下さい';
+        $isValidated = false;
+    }
+
+    if ($message === '' || preg_match('/^(\s|　)+$/u', $message)) {
+        $messageError = 'お知らせ内容を入力して下さい';
+        $isValidated = false;
+    }
+
+    if ($isValidated === true) {
+        if (!empty($_FILES)) {
+            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $image = mb_convert_encoding(basename($_FILES['image']['name']), 'cp932', 'utf8');
+                if (!move_uploaded_file(
+                    $_FILES['image']['tmp_name'],
+                    IMG_PATH . $image
+                )) {
+                    $imageError = 'アップロードに失敗しました';
+                }
+            } elseif ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+                // 何もしない
+            } else {
+                $imageError = 'アップロードに失敗しました';
+            }
+        }
+        $postArr = [
+            'posted'  => $posted,
+            'title'   => $title,
+            'message' => $message,
+            'image'   => $image
+        ];
+        $pdo->update($postArr, $id);
+
+        header('Location: news_edit_done.php');
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -17,43 +92,57 @@
     <div class="container">
         <main>
             <h1>お知らせの編集</h1>
+            <?php if (isset($idError)) : ?>
+                <?php if (isset($idError)) : ?>
+                    <p class="error"><?= $idError ?></p>
+                <?php endif; ?>
+                <p><a href="index.php">戻る</a></p>
+            <?php else : ?>
             <p>情報を入力し、「保存」ボタンを押してください。</p>
             <form action="" method="post" enctype="multipart/form-data">
-                <table>
+            <table class="admin">
                     <tr>
                         <th>日付(任意)</th>
                         <td>
-                            <div class="error">※日付は「0000-00-00」の形式で入力してください</div>
-                            <input type="date" name="posted" value="2020-05-03">
+                            <input type="date" name="posted" value="<?=$posted?>">
                         </td>
                     </tr>
                     <tr>
                         <th>タイトル</th>
                         <td>
-                            <div class="error">※タイトルを入力してください</div>
-                            <input type="text" name="title" size="80" value="さわやかシーズンに登山はいかが？">
+                            <?php if (isset($titleError)):?>
+                                <div class="error"><?=$titleError?></div>
+                            <?php endif;?>
+                            <input type="text" name="title" size="80" value="<?=h($title)?>">
                         </td>
                     </tr>
                     <tr>
                         <th>お知らせの内容</th>
                         <td>
-                            <div class="error">※お知らせ内容を入力してください</div>
-                            <textarea name="message" cols="80" rows="5">お待たせしました！これまで在庫切れで入手が困難だったクレセントシューズイチオシのトレッキングシューズが再入荷です。身体を動かすと気持ちのよい季節、さわやかな風を感じて登山はいかがでしょう？</textarea>
+                            <?php if (isset($messageError)):?>
+                                <div class="error"><?=$messageError?></div>
+                            <?php endif;?>
+                            <textarea name="message" cols="80" rows="5"><?=h($message)?></textarea>
                         </td>
                     </tr>
                     <tr>
                         <th>画像(任意)</th>
                         <td>
-                            <input type="file" name="image">
-                            <div><img src="../images/press/press03.jpg" width="64" height="64" alt=""></div>
+                            <?php if (isset($imageError)):?>
+                                <p class="error"><?=$imageError?></p>
+                            <?php endif;?>
+                            <input type="file" name="image" >
+                            <div>画像は64x64ピクセルで表示されます</div>
+                            <img class="media-object" src="<?=IMG_PATH . ($image ?: 'press.jpg')?>" height="64" width="64" alt="">
                         </td>
                     </tr>
                 </table>
                 <p>
                     <input type="submit" name="save" value="保存">
-                    <input type="submit" name="cancel" value="キャンセル">
+                    <input type="submit" value="キャンセル" formaction="index.php">
                 </p>
             </form>
+            <?php endif; ?>
         </main>
         <footer>
             <p>&copy; Crescent Shoes All rights reserved.</p>
