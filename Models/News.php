@@ -39,4 +39,27 @@ class News extends DB
             exit($e->getMessage());
         }
     }
+
+    /**
+     * フォームから受けた値をもとにDBに一件追加
+     *
+     * @param array|null $postArr
+     * @return void
+     */
+    public function add(?array $postArr): void
+    {
+        try {
+            $sql  = 'INSERT';
+            $sql .= ' INTO ' . $this->tblMain;
+            $sql .= ' (posted_at, title, message, image)';
+            $sql .= ' VALUES ("' . $postArr['posted'] . '", :title, :message, "' . $postArr['image'] . '")';
+            $stmt = $this->pdoObj->prepare($sql);
+            $stmt->bindValue(':title',   $postArr['title'], PDO::PARAM_STR);
+            $stmt->bindValue(':message', $postArr['message'], PDO::PARAM_STR);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            header('Content-Type: text/plain; charset=UTF-8', true, 500);
+            exit($e->getMessage());
+        }
+    }
 }
