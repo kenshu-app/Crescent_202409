@@ -62,4 +62,47 @@ class News extends DB
             exit($e->getMessage());
         }
     }
+
+    /**
+     * パラメータから受けたidをもとにDBの一件を取得
+     *
+     * @param integer|null $id
+     * @return boolean|array
+     */
+    public function find(?int $id): bool|array
+    {
+        try {
+            $sql  = 'SELECT *';
+            $sql .= ' FROM ' . $this->tblMain;
+            $sql .= ' WHERE id = :id';
+            $stmt = $this->pdoObj->prepare($sql);
+            $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch();
+        } catch (PDOException $e) {
+            header('Content-Type: text/plain; charset=UTF-8', true, 500);
+            exit($e->getMessage());
+        }
+    }
+
+    /**
+     * パラメータから受けたidをもとにDBの一件を削除
+     *
+     * @param integer|null $id
+     * @return void
+     */
+    public function delete(?int $id): void
+    {
+        try {
+            $sql  = 'DELETE';
+            $sql .= ' FROM ' . $this->tblMain;
+            $sql .= ' WHERE id = :id';
+            $stmt = $this->pdoObj->prepare($sql);
+            $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            header('Content-Type: text/plain; charset=UTF-8', true, 500);
+            exit($e->getMessage());
+        }
+    }
 }
