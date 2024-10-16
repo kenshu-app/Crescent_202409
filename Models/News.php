@@ -87,6 +87,26 @@ class News extends DB
     }
 
     /**
+     * ニュースの全件数を取得
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        try {
+            $sql = 'SELECT';
+            $sql .= ' COUNT(*) AS hits';
+            $sql .= ' FROM ' . $this->tblMain;
+            $sql .= ' WHERE deleted_at IS null';
+            $stmt = $this->pdoObj->query($sql);
+            return $stmt->fetch()['hits'];
+        } catch (PDOException $e) {
+            header('Content-Type: text/plain; charset=UTF-8', true, 500);
+            exit($e->getMessage());
+        }
+    }
+
+    /**
      * パラメータから受けたidをもとにDBの一件を更新
      *
      * @param integer|null $id
