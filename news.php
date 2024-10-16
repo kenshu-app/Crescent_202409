@@ -1,3 +1,13 @@
+<?php
+
+declare(strict_types=1);
+require_once(dirname(__FILE__) . '/Models/News.php');
+
+const IMG_PATH = 'images/press/';
+const NUM_NEWS = 5;
+
+$news = (new News())->all('desc', 0, NUM_NEWS);
+?>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -58,66 +68,20 @@
         </div>
         <div class="row">
             <div class="col-md-9 col-xs-12 margin-top-md">
-                <div class="well well-lg">
-                    <div class="media">
-                        <a class="pull-left">
-                            <img class="media-object" src="images/press/press01.jpg" height="64" width="64" alt="">
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading">本格的に夏到来
-                                <small>July 10, 2020</small>
-                            </h4> 日差しも強くなってきました。そろそろ海が恋しい季節。潮風を感じながら砂浜を散歩するのも気持ちいいですね。クレセントシューズおすすめの洗濯機でも洗えるスニーカー、夏のニーズにお応えしてお手入れもラクラクです。
+                <?php foreach ($news as $item) : ?>
+                    <div class="well well-lg">
+                        <div class="media">
+                            <a class="pull-left">
+                                <img class="media-object" src="<?=IMG_PATH . ($item['image'] ?: 'press.jpg')?>" height="64" width="64" alt="">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><?=$item['title']?>
+                                    <small><?=(new DateTime($item['posted_at']))->format('F j, Y')?></small>
+                                </h4><?=$item['message']?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="well well-lg">
-                    <div class="media">
-                        <a class="pull-left">
-                            <img class="media-object" src="images/press/press02.jpg" alt="">
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading">雨の日を楽しもう！
-                                <small>June 2, 2020</small>
-                            </h4> 雨の日のお出かけにはどの靴を履いていくか迷うことありませんか？クレセントシューズのレインシューズは強力な防水加工かつ靴の中がむれない構造になっていて雨の日でも安心です。
-                        </div>
-                    </div>
-                </div>
-                <div class="well well-lg">
-                    <div class="media">
-                        <a class="pull-left">
-                            <img class="media-object" src="images/press/press03.jpg" alt="">
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading">さわやかシーズンに登山はいかが？
-                                <small>May 3, 2020</small>
-                            </h4> お待たせしました！これまで在庫切れで入手が困難だったクレセントシューズイチオシのトレッキングシューズが再入荷です。身体を動かすと気持ちのよい季節、さわやかな風を感じて登山はいかがでしょう？
-                        </div>
-                    </div>
-                </div>
-                <div class="well well-lg">
-                    <div class="media">
-                        <a class="pull-left">
-                            <img class="media-object" src="images/press/press04.jpg" alt="">
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading">春色がやってきた
-                                <small>April 20, 2020</small>
-                            </h4> 春色のパステルカラー！たくさんの明るい色が店内を飾っています。足元から明るく、お出かけの気分を上げていきましょう！たくさん歩いても大丈夫、ローヒールの靴もたくさん入荷しております。ぜひ店舗にも足をお運びください。
-                        </div>
-                    </div>
-                </div>
-                <div class="well well-lg">
-                    <div class="media">
-                        <a class="pull-left">
-                            <img class="media-object" src="images/press/press05.jpg" alt="">
-                        </a>
-                        <div class="media-body">
-                            <h4 class="media-heading">春の兆し
-                                <small>March 25, 2020</small>
-                            </h4> 凍えたていた大地にやわらかい日差しがさしてきましたね。そろそろ春の準備です。お散歩にも最適のウォーキングシューズはいかがですか？ウォークラインを考慮した構造で足への負担をやわらげています。ぜひ一度お試しください。
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
             <div class="col-md-3 col-xs-12">
                 <div class="row">

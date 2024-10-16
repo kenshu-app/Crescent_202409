@@ -1,3 +1,10 @@
+<?php declare(strict_types=1);
+require_once(dirname(__FILE__) . '/../Models/News.php');
+
+const IMG_PATH = '../images/press/';
+
+$news = (new News())->all('desc');
+?>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -26,41 +33,15 @@
                     <th>編集</th>
                     <th>削除</th>
                 </tr>
+                <?php foreach ($news as $item):?>
                 <tr>
-                    <td>2020-07-10</td>
-                    <td><span class="title">本格的に夏到来</span>日差しも強くなってきました。そろそろ海が恋しい季節。潮風を感じながら砂浜を散歩するのも気持ちいいですね。クレセントシューズおすすめの洗濯機でも洗えるスニーカー、夏のニーズにお応えしてお手入れもラクラクです。</td>
-                    <td><img src="../images/press/press01.jpg" width="64" height="64" alt=""></td>
-                    <td><a href="news_edit.php?id=1">編集</a></td>
-                    <td><a href="news_delete.php?id=1">削除</a></td>
+                    <td><?=$item['posted_at']?></td>
+                    <td><span class="title"><?=$item['title']?></span><?=$item['message']?></td>
+                    <td><img src="<?=IMG_PATH . ($item['image'] ?: 'press.jpg')?>" width="64" height="64" alt=""></td>
+                    <td><a href="news_edit.php?id=<?=$item['id']?>">編集</a></td>
+                    <td><a href="news_delete.php?id=<?=$item['id']?>">削除</a></td>
                 </tr>
-                <tr>
-                    <td>2020-06-02</td>
-                    <td><span class="title">雨の日を楽しもう！</span>雨の日のお出かけにはどの靴を履いていくか迷うことありませんか？クレセントシューズのレインシューズは強力な防水加工かつ靴の中がむれない構造になっていて雨の日でも安心です。</td>
-                    <td><img src="../images/press/press02.jpg" width="64" height="64" alt=""></td>
-                    <td><a href="news_edit.php?id=1">編集</a></td>
-                    <td><a href="news_delete.php?id=1">削除</a></td>
-                </tr>
-                <tr>
-                    <td>2020-05-03</td>
-                    <td><span class="title">さわやかシーズンに登山はいかが？</span>お待たせしました！これまで在庫切れで入手が困難だったクレセントシューズイチオシのトレッキングシューズが再入荷です。身体を動かすと気持ちのよい季節、さわやかな風を感じて登山はいかがでしょう？</td>
-                    <td><img src="../images/press/press03.jpg" width="64" height="64" alt=""></td>
-                    <td><a href="news_edit.php?id=1">編集</a></td>
-                    <td><a href="news_delete.php?id=1">削除</a></td>
-                </tr>
-                <tr>
-                    <td>2020-04-20</td>
-                    <td><span class="title">春色がやってきた</span>春色のパステルカラー！たくさんの明るい色が店内を飾っています。足元から明るく、お出かけの気分を上げていきましょう！たくさん歩いても大丈夫、ローヒールの靴もたくさん入荷しております。ぜひ店舗にも足をお運びください。</td>
-                    <td><img src="../images/press/press04.jpg" width="64" height="64" alt=""></td>
-                    <td><a href="news_edit.php?id=1">編集</a></td>
-                    <td><a href="news_delete.php?id=1">削除</a></td>
-                </tr>
-                <tr>
-                    <td>2020-03-25</td>
-                    <td><span class="title">春の兆し</span>凍えたていた大地にやわらかい日差しがさしてきましたね。そろそろ春の準備です。お散歩にも最適のウォーキングシューズはいかがですか？ウォークラインを考慮した構造で足への負担をやわらげています。ぜひ一度お試しください。</td>
-                    <td><img src="../images/press/press05.jpg" width="64" height="64" alt=""></td>
-                    <td><a href="news_edit.php?id=1">編集</a></td>
-                    <td><a href="news_delete.php?id=1">削除</a></td>
-                </tr>
+                <?php endforeach;?>
             </table>
         </main>
         <footer>
