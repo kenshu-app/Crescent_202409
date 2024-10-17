@@ -1,7 +1,12 @@
 <?php
 
 declare(strict_types=1);
+session_start();
+
 require_once(dirname(__FILE__) . '/../Models/News.php');
+require_once(dirname(__FILE__) . '/auth.inc.php');
+require_once(dirname(__FILE__) . '/../util.inc.php');
+authConfirm();
 
 const IMG_PATH = '../images/press/';
 const NUM_PER_PAGE = 5;
@@ -31,7 +36,7 @@ $news = $pdo->all('desc', $offset, NUM_PER_PAGE);
     <header class="adjust">
         <div class="container layout">
             <h2><a href="index.php">Crescent Shoes 管理</a></h2>
-            <div>admin<a href="logout.php" class="logout">ログアウト</a></div>
+            <?php include dirname(__FILE__) . '/account.parts.php'; ?>
         </div>
     </header>
     <div class="container">

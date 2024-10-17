@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+$_SESSION = [];
+$p = session_get_cookie_params();
+setcookie(session_name(), '', time() - 60,
+    $p['path'], $p['domain'],
+    $p['secure'], $p['httponly']);
+session_destroy();
+?>
 <!DOCTYPE html>
 <html lang="ja">
 

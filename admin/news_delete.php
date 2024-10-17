@@ -1,6 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
+session_start();
+require_once(dirname(__FILE__) . '/auth.inc.php');
+authConfirm();
+
 require_once(dirname(__FILE__) . '/../util.inc.php');
 require_once(dirname(__FILE__) . '/../Models/News.php');
 
@@ -44,7 +49,7 @@ if (isset($_POST['delete'])) {
     <header class="adjust">
         <div class="container layout">
             <h2><a href="index.php">Crescent Shoes 管理</a></h2>
-            <div>admin<a href="logout.php" class="logout">ログアウト</a></div>
+            <?php include dirname(__FILE__) . '/account.parts.php'; ?>
         </div>
     </header>
     <div class="container">

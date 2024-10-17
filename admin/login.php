@@ -1,3 +1,47 @@
+<?php declare(strict_types=1);
+require_once(dirname(__FILE__) . '/../util.inc.php');
+require_once(dirname(__FILE__) . '/../Models/Auth.php');
+
+session_start();
+if (!empty($_SESSION) && $_SESSION['authenticated'] === true) {
+    header('Location: index.php');
+    exit;
+}
+
+$mail = '';
+$pass = '';
+$isValidated = false;
+if (!empty($_POST)) {
+    $mail = $_POST['mail'];
+    $pass = $_POST['pass'];
+    $isValidated = true;
+
+    if ($mail === '' || preg_match('/^(\s|　)+$/u', $mail)) {
+        $mailError = 'メールアドレスを入力してください。';
+        $isValidated = false;
+    }
+
+    if ($pass === '' || preg_match('/^(\s|　)+$/u', $pass)) {
+        $passError = 'パスワードを入力してください。';
+        $isValidated = false;
+    }
+
+    if ($isValidated === true) {
+        $auth = new Auth();
+        if ($auth->login($mail, $pass)) {
+            session_regenerate_id(true);
+            $_SESSION['authenticated'] = true;
+            $_SESSION['user'] = $auth->getUserName();
+            header('Location: index.php');
+            exit;
+        } else {
+            $verifyError = 'メールアドレスまたはパスワードに誤りがあります。';
+        }
+    }
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -16,21 +60,27 @@
     <div class="container">
         <main>
             <h1>ログイン</h1>
-            <p class="error">メールアドレスまたはパスワードに誤りがあります。</p>
+            <?php if (isset($verifyError)):?>
+                <p class="error"><?=$verifyError?></p>
+            <?php endif;?>
             <form action="" method="post" novalidate>
                 <table class="admin entry">
                     <tr>
                         <th>メールアドレス</th>
                         <td>
                             <input type="email" name="mail">
-                            <span class="error">メールアドレスを入力してください。</span>
+                            <?php if (isset($mailError)):?>
+                                <span class="error"><?=$mailError?></span>
+                            <?php endif;?>
                         </td>
                     </tr>
                     <tr>
                         <th>パスワード</th>
                         <td>
                             <input type="password" name="pass">
-                            <span class="error">パスワードを入力してください。</span>
+                            <?php if (isset($passError)):?>
+                                <span class="error"><?=$passError?></span>
+                            <?php endif;?>
                         </td>
                     </tr>
                 </table>
