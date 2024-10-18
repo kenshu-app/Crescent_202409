@@ -5,6 +5,7 @@ declare(strict_types=1);
 session_start();
 require_once dirname(__FILE__) . '/util.inc.php';
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
+require_once(dirname(__FILE__) . '/settings.php');
 
 use Dotenv\Dotenv;
 
@@ -29,16 +30,16 @@ if (isset($_POST['send'])) {
     try {
         $env = Dotenv::createImmutable(__DIR__)->load();
         $transport = new Swift_SmtpTransport(
-            $env['SMTP_HOST'],
-            $env['SMTP_PORT'],
-            $env['SMTP_PROTOCOL']
+            SMTP_HOST,
+            SMTP_PORT,
+            SMTP_PROTOCOL
         );
-        $transport->setUsername($env['GMAIL_SITE']);
-        $transport->setPassword($env['GMAIL_APPPASS']);
+        $transport->setUsername(GMAIL_SITE);
+        $transport->setPassword(GMAIL_APPPASS);
         $mailer = new Swift_Mailer($transport);
-        $message = new Swift_Message($env['MAIL_TITLE']);
-        $message->setFrom([explode('=>', $env['MAIL_FROM'])[0]=>explode('=>', $env['MAIL_FROM'])[1]]);
-        $message->setTo([explode('=>', $env['MAIL_TO'])[0]=>explode('=>', $env['MAIL_TO'])[1]]);
+        $message = new Swift_Message(MAIL_TITLE);
+        $message->setFrom(MAIL_FROM);
+        $message->setTo(MAIL_TO);
         $mailBody = <<<EOT
         <img src="{$message->embed(Swift_Image::fromPath('images/logo01.png'))}">
         <h2>Crescent Shoes 問い合わせの通知</h2>
@@ -78,6 +79,11 @@ if (isset($_POST['send'])) {
     } catch (Exception $e) {
         exit($e->getMessage());
     }
+}
+
+if (isset($_POST['back'])) {
+    header('Location: contact.php');
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -174,7 +180,7 @@ if (isset($_POST['send'])) {
                     <div class="form-group">
                         <div class="col-sm-10">
                             <button type="submit" name="send" class="btn btn-success btn-lg">送信する</button>
-                            <button type="submit" class="btn btn-success btn-lg" formaction="contact.php">修正する</button>
+                            <button type="submit" name="back" class="btn btn-success btn-lg">修正する</button>
                         </div>
                     </div>
                 </form>
