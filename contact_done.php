@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
 
-<body class="pageTop">
+<body id="pageTop">
     <header class="navbar navbar-default navbar-fixed-top" role="banner">
         <div class="container">
             <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation">
